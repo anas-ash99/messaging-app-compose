@@ -1,50 +1,63 @@
 package com.example.messagingapp.viewModels
 
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
+import com.example.messagingapp.Firestore
 import com.example.messagingapp.State
 import com.example.messagingapp.UserActions
 import com.example.messagingapp.models.MessageModel
 import java.time.LocalDateTime
+import java.util.UUID
 
 class MainViewModel: ViewModel() {
 
 
     var state = mutableStateOf(State())
+    private val firestore = Firestore()
 
-    val messageValue = mutableStateOf("")
-    val loggedInUser = "123"
-    val messages = mutableListOf(MessageModel(content = "Hi", date =  "12:50"), MessageModel(content = "Hi", date =  "12:50"), MessageModel(content = "Hi", date =  "12:50"), MessageModel(content = "Hi", date =  "12:50"), MessageModel(content = "Hi", date =  "12:50"), MessageModel(content = "Hi", date =  "12:50"), MessageModel(content = "Hi", date =  "12:50"), MessageModel(content = "Hi", date =  "12:50"), MessageModel("123",content = "hi there", date =  "12:50"), MessageModel("123",content = "how are you i haven't heard from you since to loong", date =  "13:50"),MessageModel("123",content = "how are you i haven't heard from you since to loong", date =  "13:50"),MessageModel("123",content = "how are you i haven't heard from you since to loong", date =  "13:50"),MessageModel("123",content = "how are you i haven't heard from you since to loong", date =  "13:50"),MessageModel("123",content = "how are you i haven't heard from you since to loong", date =  "13:50"),MessageModel(content = "Hi", date =  "12.50"))
-    val listState = mutableStateOf(messages.size)
-    fun onSendClick(){
 
-        state.value.messages.add(MessageModel("123",state.value.messageInput, LocalDateTime.now().hour.toString() + ":"+ LocalDateTime.now().minute.toString()))
+    private fun onSendClick(){
+    val id = UUID.randomUUID().toString()
+    val message = MessageModel(
+        id,state.value.chatId, state.value.userId, state.value.messageInput, LocalDateTime.now().hour.toString() + ":"+ LocalDateTime.now().minute.toString(), state.value.otherUserId)
+        state.value.messages.add(message)
         state.value = state.value.copy(messages = state.value.messages, messageInput = "", isMicIcon = true, listState = state.value.messages.size )
+        firestore.sendMessage(message)
 
     }
 
-    fun takeInput(string:String){
+    private fun takeInput(string:String){
         state.value = state.value.copy(isMicIcon = string.isBlank(), messageInput = string)
     }
 
-    fun init() {
-        state.value = state.value.copy(messages = messages, listState = messages.size)
+
+
+    private fun listenToNewMessagesFireStore(){
+        state.value = state.value.copy(isMessagesLoading = true)
+        firestore.listenToNewMessages(state)
+
     }
+
 
 
     fun onAction(action:UserActions){
         when(action){
             UserActions.AttachmentIconClick -> {}
-            is UserActions.MessageLongPress -> {
-                println(action.message)
-            }
+            is UserActions.MessageLongPress -> {}
             UserActions.MicClick -> {}
             is UserActions.SendMessage -> onSendClick()
+            is UserActions.TypeMessage-> takeInput(action.input)
+            is UserActions.OnDialogDoneClick -> {
+                onDialogDoneClick(action.userId, action.otherUser, action.chatId)
+            }
+            UserActions.MenuIconClick -> state.value = state.value.copy(isDialogShown = true)
         }
 
+    }
+
+    private fun onDialogDoneClick(userId:String, otherUser:String, chatId: String) {
+        state.value = State()
+        state.value = state.value.copy(chatId = chatId, isDialogShown = false, userId = userId, otherUserId = otherUser, listState = state.value.messages.size)
+        listenToNewMessagesFireStore()
     }
 }

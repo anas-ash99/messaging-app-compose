@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "824820878489",
+    "project_id": "messginappcompose",
+    "storage_bucket": "messginappcompose.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824820878489:android:7d33a770c544127049bc08",
+        "android_client_info": {
+          "package_name": "com.example.messagingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824820878489-5cs0r8kav75s4g6t2ut8pnp4kcd3n226.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcVhegL0eKEs2yRNR5EKgYA98u5CNWHC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824820878489-5cs0r8kav75s4g6t2ut8pnp4kcd3n226.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

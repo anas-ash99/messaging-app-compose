@@ -36,7 +36,7 @@ fun BottomContainer(
                 )
         }
         if (isMicIcon) Image(painter = painterResource(id = R.drawable.ic_baseline_mic_24), contentDescription = "Mic" )
-        else Image(painter = painterResource(id = R.drawable.ic_baseline_send_24), contentDescription = "Mic", modifier = Modifier.clickable {
+        else Image(painter = painterResource(id = R.drawable.ic_baseline_send_24), contentDescription = "send button", modifier = Modifier.clickable {
             onSendClick()
         })
     }
@@ -44,8 +44,9 @@ fun BottomContainer(
 
 @Composable
 fun ContactHeader(
-    name:String,
+    state: State,
     painter: Painter,
+    onMenuClick:()->Unit
 ){
 
     Row(
@@ -66,11 +67,14 @@ fun ContactHeader(
             Modifier
                 .weight(1f)
         ) {
-            Text(text = name, fontSize = 18.sp)
-            Text(text = "Online", color = Color(0xFF82C492))
+            Text(text = state.chatId, fontSize = 18.sp)
+//            Text(text = "Online", color = Color(0xFF82C492))
         }
 
-        Image(painter = painterResource(id = R.drawable.ic_outline_phone_24), contentDescription = "phone", modifier = Modifier.clickable {  } )
+        Image(painter = painterResource(id = R.drawable.ic_baseline_more_vert_24), contentDescription = "menu", modifier = Modifier.clickable {
+            onMenuClick()
+         println("click")
+        } )
 
 
     }
