@@ -18,11 +18,11 @@ class MainViewModel: ViewModel() {
 
     private fun onSendClick(){
     val id = UUID.randomUUID().toString()
-    val message = MessageModel(
-        id,state.value.chatId, state.value.userId, state.value.messageInput, LocalDateTime.now().hour.toString() + ":"+ LocalDateTime.now().minute.toString(), state.value.otherUserId)
+    val message =
+        MessageModel(id,state.value.chatId, state.value.userId, state.value.messageInput, LocalDateTime.now().hour.toString() + ":"+ LocalDateTime.now().minute.toString(), state.value.otherUserId)
         state.value.messages.add(message)
         state.value = state.value.copy(messages = state.value.messages, messageInput = "", isMicIcon = true, listState = state.value.messages.size )
-        firestore.sendMessage(message)
+        firestore.sendMessage(state.value)
 
     }
 
@@ -57,7 +57,7 @@ class MainViewModel: ViewModel() {
 
     private fun onDialogDoneClick(userId:String, otherUser:String, chatId: String) {
         state.value = State()
-        state.value = state.value.copy(chatId = chatId, isDialogShown = false, userId = userId, otherUserId = otherUser, listState = state.value.messages.size)
+        state.value = state.value.copy(chatId = chatId, messages = mutableListOf(), isDialogShown = false, userId = userId, otherUserId = otherUser, listState = state.value.messages.size)
         listenToNewMessagesFireStore()
     }
 }

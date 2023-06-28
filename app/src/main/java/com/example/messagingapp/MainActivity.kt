@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         setContent {
+
             if (viewModel.state.value.isDialogShown){
                 ChatIdDialog(state = viewModel.state){ userId, otherUserId, chatId ->
                     viewModel.onAction(UserActions.OnDialogDoneClick(userId, otherUserId, chatId))
@@ -83,6 +84,10 @@ fun ChatScreen(
                         onMessageClick = {onAction(UserActions.MessageLongPress(message))})
                 }
 
+            }
+            coroutineScope.launch {
+
+                listState.animateScrollToItem(state.value.messages.size)
             }
 
         }

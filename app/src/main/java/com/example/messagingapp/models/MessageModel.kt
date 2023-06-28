@@ -8,4 +8,6 @@ data class MessageModel(
     var content:String,
     var date:String,
     var toUser:String ="",
-)
+){
+    constructor(): this("","","","","")
+}
